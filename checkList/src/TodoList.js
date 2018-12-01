@@ -2,13 +2,15 @@ import React, { Component, Fragment } from "react";
 import Item from "./Item";
 import axios from "axios";
 import store from "./store";
+import "antd/dist/antd.css";
 import "./style.css";
+import { Input, Button, List } from "antd";
 export default class TodoList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       inputValue: "",
-      list: ["aaa"]
+      list: []
     };
     this.handleBtnClick = this.handleBtnClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -17,27 +19,39 @@ export default class TodoList extends Component {
   render() {
     return (
       <Fragment>
-        <h1>Your checking list</h1>
+        <h1 style={{ marginLeft: "100px", marginTop: "50px" }}>
+          Checklist: click button to add, click item to delete
+        </h1>
         <p />
-        <input
+        <Input
           id="insertArea"
-          className="input"
+          placeholder="add something..."
+          style={{ width: "600px", marginLeft: "50px" }}
           value={this.state.inputValue}
           onChange={this.handleInputChange}
         />
         <span> </span>
-        <button
-          className="badge m-2 badge-primary"
+        <Button
+          type="primary"
+          // className="badge m-2 badge-primary"
           onClick={this.handleBtnClick}
         >
           Add to Checklist
-        </button>
-        <ul>{this.getTodoItem()}</ul>
+        </Button>
+        {/* <ul style={{ marginLeft: "60px", marginTop: "20px" }}>
+          {this.getTodoItem()}
+        </ul> */}
+        <List
+          style={{ marginLeft: "60px", marginTop: "20px", width: "800px" }}
+          bordered
+          dataSource={this.getTodoItem()}
+          renderItem={item => <List.Item>{item}</List.Item>}
+        />
       </Fragment>
     );
   }
   componentDidMount() {
-    //Ajax request
+    //Ajax request, add  backend api data to front end
     axios
       .get("/api/todolist.json")
       .then(res => {
